@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>My Love • Moudhi</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Amiri:wght@400;700&display=swap');
+
+  :root {
+    /* Colors extracted from the provided image */
+    --night-sky: #0a0d14;
+    --twilight: #161e2c;
+    --window-wood: #2a1f1a;
+    --book-cover: #4a352a;
+    --lamp-glow: #e6a861;
+    --lamp-bright: #ffdfa3;
+    --text-primary: #eed6bd;
+    --text-muted: #a88e7b;
+    --border-gold: rgba(230, 168, 97, 0.3);
+    
+    /* Layout */
+    --ipad-width: 850px;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    background-color: var(--night-sky);
+    color: var(--text-primary);
+    font-family: 'Playfair Display', serif;
+    overflow-x: hidden;
+  }
+
+  /* ── BACKGROUND (STARRY NIGHT & LAMP GLOW) ── */
+  .background-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: radial-gradient(circle at 50% 100%, rgba(230, 168, 97, 0.15) 0%, rgba(22, 30, 44, 0.8) 50%, var(--night-sky) 100%);
+    pointer-events: none;
+  }
+
+  .stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+      radial-gradient(1px 1px at 40px 70px, #ffffff, rgba(0,0,0,0)),
+      radial-gradient(1.5px 1.5px at 90px 40px, var(--lamp-bright), rgba(0,0,0,0)),
+      radial-gradient(1px 1px at 160px 120px, #ffffff, rgba(0,0,0,0));
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    opacity: 0.4;
+    animation: twinkle 5s infinite alternate;
+  }
+
+  /* ── MAIN CONTAINER (IPAD OPTIMIZED) ── */
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: var(--ipad-width);
+    margin: 0 auto;
+    padding: 60px 30px 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(3.5rem, 8vw, 6rem);
+    font-weight: 500;
+    letter-spacing: 6px;
+    color: var(--lamp-bright);
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 10px;
+    text-shadow: 0 0 40px rgba(230, 168, 97, 0.4);
+  }
+
+  .subtitle {
+    font-family: 'Amiri', serif;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    color: var(--text-primary);
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+  }
+
+  .subtitle span {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8em;
+    letter-spacing: 4px;
+    color: var(--text-muted);
+  }
+
+  /* ── PURE SVG GLOWING AMBER ROSE ── */
+  .flower-container {
+    width: 280px;
+    height: 380px;
+    margin: 20px auto 50px;
+    position: relative;
+    filter: drop-shadow(0 0 25px rgba(230, 168, 97, 0.3));
+    animation: breathing 4s ease-in-out infinite alternate;
+  }
+
+  svg.coded-flower {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  /* ── INTERACTIVE VINTAGE BOOK / QUIZ CONTAINER ── */
+  .quiz-board {
+    background: linear-gradient(145deg, rgba(42, 31, 26, 0.8), rgba(22, 30, 44, 0.6));
+    border: 1px solid var(--border-gold);
+    border-radius: 12px;
+    padding: 50px 40px;
+    width: 100%;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(230, 168, 97, 0.05);
+    position: relative;
+    backdrop-filter: blur(10px);
+  }
+
+  .quiz-board::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 1px dashed rgba(230, 168, 97, 0.2);
+    border-radius: 8px;
+    pointer-events: none;
+  }
+
+  .stage-indicator {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    color: var(--lamp-glow);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .question-text {
+    font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+    line-height: 1.4;
+    margin-bottom: 30px;
+    color: var(--lamp-bright);
+  }
+
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .opt-btn {
+    background: rgba(10, 13, 20, 0.6);
+    border: 1px solid var(--border-gold);
+    border-radius: 8px;
+    padding: 20px 24px;
+    color: var(--text-primary);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+  }
+
+  .opt-btn:active {
+    transform: scale(0.98);
+  }
+
+  .opt-btn.correct {
+    background: rgba(230, 168, 97, 0.2);
+    border-color: var(--lamp-glow);
+    color: var(--lamp-bright);
+  }
+
+  .opt-btn.incorrect {
+    background: rgba(180, 70, 70, 0.2);
+    border-color: #b44646;
+    color: #ffbaba;
+  }
+
+  .feedback-area {
+    margin-top: 25px;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--lamp-glow);
+    min-height: 35px;
+  }
+
+  /* ── ULTIMATE DECISION (RUNAWAY BUTTON) ── */
+  .ultimate-stage {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    min-height: 250px; /* Space for the button to run around */
+  }
+
+  .action-buttons {
+    position: relative;
+    width: 100%;
+    height: 120px;
+    margin-top: 30px;
+  }
+
+  .btn-main {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    padding: 18px 40px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    text-transform: uppercase;
+  }
+
+  .btn-yes {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, var(--lamp-glow), #b07234);
+    color: var(--night-sky);
+    box-shadow: 0 0 20px rgba(230, 168, 97, 0.4);
+    z-index: 2;
+  }
+
+  .btn-no {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, 80px); /* Starts below the YES button */
+    background: var(--night-sky);
+    color: var(--text-muted);
+    border: 1px solid var(--text-muted);
+    transition: left 0.15s ease-out, top 0.15s ease-out;
+    z-index: 3;
+  }
+
+  /* ── VICTORY SCREEN ── */
+  .victory-stage {
+    display: none;
+    animation: fadeIn 1s ease forwards;
+  }
+
+  .victory-title {
+    font-family: 'Cinzel', serif;
+    font-size: 2.5rem;
+    color: var(--lamp-bright);
+    margin-bottom: 20px;
+  }
+
+  .victory-text {
+    font-size: 1.3rem;
+    line-height: 1.8;
+    color: var(--text-primary);
+  }
+
+  /* ── SVG SPARKS (ON TAP) ── */
+  .svg-spark {
+    position: fixed;
+    pointer-events: none;
+    width: 30px;
+    height: 30px;
+    transform: translate(-50%, -50%);
+    animation: sparkFloat 1s ease-out forwards;
+    z-index: 9999;
+  }
+
+  /* ── KEYFRAMES ── */
+  @keyframes twinkle {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.7; }
+  }
+
+  @keyframes breathing {
+    0% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(230, 168, 97, 0.2)); }
+    100% { transform: scale(1.02); filter: drop-shadow(0 0 35px rgba(230, 168, 97, 0.5)); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes sparkFloat {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5) rotate(0deg); }
+    100% { opacity: 0; transform: translate(-50%, -120%) scale(1.5) rotate(90deg); }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- Night Sky Background -->
+<div class="background-layer">
+  <div class="stars"></div>
+</div>
+
+<div class="container">
+  
+  <h1 class="title">My Love</h1>
+  <h2 class="subtitle">موضي <span>• Moudhi</span></h2>
+
+  <!-- PURE SVG AMBER NIGHT ROSE -->
+  <div class="flower-container" id="flowerArt">
+    <svg class="coded-flower" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Gradients matching the lamp glow -->
+        <linearGradient id="stemGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#4a352a" />
+          <stop offset="50%" stop-color="#8c6e5c" />
+          <stop offset="100%" stop-color="#4a352a" />
+        </linearGradient>
+        
+        <radialGradient id="petalCore" cx="50%" cy="80%" r="80%">
+          <stop offset="0%" stop-color="#ffdfa3" />
+          <stop offset="50%" stop-color="#e6a861" />
+          <stop offset="100%" stop-color="#8a5a33" />
+        </radialGradient>
+
+        <linearGradient id="petalOuter" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stop-color="#8a5a33" />
+          <stop offset="50%" stop-color="#e6a861" />
+          <stop offset="100%" stop-color="#ffdfa3" />
+        </linearGradient>
+
+        <!-- SVG Glow Filter -->
+        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="8" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+      </defs>
+
+      <!-- Stem -->
+      <path d="M 150 250 Q 140 320 160 400" fill="none" stroke="url(#stemGrad)" stroke-width="6" stroke-linecap="round"/>
+      
+      <!-- Leaves -->
+      <path d="M 148 300 Q 100 280 90 250 Q 120 270 148 290" fill="url(#stemGrad)"/>
+      <path d="M 152 330 Q 200 310 210 280 Q 180 300 152 320" fill="url(#stemGrad)"/>
+
+      <!-- Back Petals -->
+      <path d="M 150 250 C 60 200, 80 100, 150 150 C 220 100, 240 200, 150 250" fill="url(#petalOuter)" filter="url(#glow)"/>
+      <path d="M 150 260 C 20 220, 40 80, 150 120 C 260 80, 280 220, 150 260" fill="url(#petalOuter)" opacity="0.6"/>
+
+      <!-- Mid Petals -->
+      <path d="M 150 250 C 90 220, 100 130, 150 170 C 200 130, 210 220, 150 250" fill="url(#petalCore)"/>
+      
+      <!-- Center Bud -->
+      <path d="M 150 250 C 120 230, 130 160, 150 180 C 170 160, 180 230, 150 250" fill="#ffdfa3" filter="url(#glow)"/>
+      
+      <!-- Golden Core Light -->
+      <circle cx="150" cy="190" r="12" fill="#ffffff" filter="url(#glow)"/>
+    </svg>
+  </div>
+
+  <!-- INTERACTIVE QUIZ BOARD -->
+  <div class="quiz-board" id="quizContainer">
+    
+    <div id="questionsPhase">
+      <div class="stage-indicator" id="stageText">Chapter I</div>
+      <h2 class="question-text" id="questionText">Loading...</h2>
+      
+      <div class="options-grid" id="optionsBox">
+        <!-- Buttons injected by JS -->
+      </div>
+
+      <div class="feedback-area" id="feedbackText"></div>
+    </div>
+
+    <!-- ULTIMATE DECISION (RUNAWAY BUTTON) -->
+    <div class="ultimate-stage" id="ultimatePhase">
+      <div class="stage-indicator">The Final Page</div>
+      <h2 class="question-text">Will you accept this amber rose, let me support your dreams, and keep choosing us?</h2>
+      
+      <div class="action-buttons" id="actionArea">
+        <button class="btn-main btn-yes" onclick="winState()">YES, FOREVER</button>
+        <button class="btn-main btn-no" id="btnNo" ontouchstart="dodge()" onmouseover="dodge()">NO</button>
+      </div>
+    </div>
+
+    <!-- VICTORY SCREEN -->
+    <div class="victory-stage" id="victoryPhase">
+      <!-- Minimalist Coded Graphic -->
+      <svg width="60" height="60" viewBox="0 0 100 100" style="margin: 0 auto 20px; display: block; filter: drop-shadow(0 0 10px #e6a861);">
+        <path d="M50 80 L45 75 C20 50 10 35 10 20 C10 5 25 -5 40 5 C45 8 50 15 50 15 C50 15 55 8 60 5 C75 -5 90 5 90 20 C90 35 80 50 55 75 L50 80 Z" fill="#ffdfa3"/>
+      </svg>
+      <h2 class="victory-title">You said Yes</h2>
+      <p class="victory-text">
+        My love, my genius girl, my queen, and my home.<br>
+        Today, tomorrow, and forever.<br><br>
+        <span style="color: var(--lamp-glow); font-family: 'Cinzel', serif;">Happy Birthday, Moudhi.</span>
+      </p>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+// ── CUSTOM SVG SPARKS ON TAP (NO EMOJIS) ──
+document.addEventListener('pointerdown', (e) => {
+  // Don't spawn on buttons
+  if (e.target.closest('button')) return;
+
+  const spark = document.createElement('div');
+  spark.className = 'svg-spark';
+  spark.style.left = `${e.clientX}px`;
+  spark.style.top = `${e.clientY}px`;
+  
+  // Create a raw SVG 4-point star/diamond
+  spark.innerHTML = `
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 50 0 C 50 40, 60 50, 100 50 C 60 50, 50 60, 50 100 C 50 60, 40 50, 0 50 C 40 50, 50 40, 50 0" fill="#ffdfa3" filter="drop-shadow(0 0 5px #e6a861)"/>
+    </svg>
+  `;
+  
+  document.body.appendChild(spark);
+  setTimeout(() => spark.remove(), 1000);
+});
+
+// ── QUIZ DATA ──
+const questions = [
+  {
+    q: "In an unexpected zombie outbreak, what is your primary strategy with me?",
+    opts: [
+      "Sacrifice me to the zombies to buy yourself runtime.",
+      "Sit in a safe spot eating snacks while I protect you.",
+      "Use me as a human shield."
+    ],
+    ans: 1,
+    yesFeedback: "Correct. I'll fight them off, you enjoy the snacks.",
+    noFeedback: "Be serious! You wouldn't throw me to the wolves... try again."
+  },
+  {
+    q: "How many times does my heart skip a beat when you text me?",
+    opts: [
+      "Just once a day.",
+      "Exactly 21 times (for our first 21 days).",
+      "Every single time your name lights up my screen."
+    ],
+    ans: 2,
+    yesFeedback: "Exactly. You hold the remote control to my heart rate.",
+    noFeedback: "Way too low. Guess again!"
+  },
+  {
+    q: "What is my absolute favorite thing about you?",
+    opts: [
+      "Your clever mind and brilliant potential.",
+      "Your beautiful heart and safe-place aura.",
+      "Your exceptionally cute and stubborn attitude.",
+      "All of the above wrapped into one perfect girl."
+    ],
+    ans: 3,
+    yesFeedback: "Bingo. The perfect package. Sassy, smart, and mine.",
+    noFeedback: "True, but why pick one when you're all of them? Try again."
+  }
+];
+
+let currentIndex = 0;
+let isAnimating = false;
+
+function renderQuestion() {
+  const qData = questions[currentIndex];
+  document.getElementById('stageText').innerText = `Chapter ${currentIndex + 1}`;
+  document.getElementById('questionText').innerText = qData.q;
+  document.getElementById('feedbackText').innerText = '';
+  
+  const box = document.getElementById('optionsBox');
+  box.innerHTML = '';
+  isAnimating = false;
+
+  qData.opts.forEach((optText, index) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    
+    // Custom SVG bullet point instead of emojis
+    btn.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" style="margin-right: 15px; flex-shrink: 0; fill: var(--lamp-glow);">
+        <polygon points="12,2 15,9 22,12 15,15 12,22 9,15 2,12 9,9" />
+      </svg>
+      <span>${optText}</span>
+    `;
+    
+    btn.onclick = () => handleChoice(btn, index, qData.ans);
+    box.appendChild(btn);
+  });
+}
+
+function handleChoice(btn, selectedIdx, correctIdx) {
+  if (isAnimating) return;
+  const qData = questions[currentIndex];
+  
+  if (selectedIdx === correctIdx) {
+    isAnimating = true;
+    btn.classList.add('correct');
+    document.getElementById('feedbackText').innerText = qData.yesFeedback;
+    
+    document.querySelectorAll('.opt-btn').forEach(b => b.style.pointerEvents = 'none');
+    
+    setTimeout(() => {
+      currentIndex++;
+      if (currentIndex < questions.length) {
+        renderQuestion();
+      } else {
+        // Move to the final runaway phase
+        document.getElementById('questionsPhase').style.display = 'none';
+        document.getElementById('ultimatePhase').style.display = 'flex';
+        // Give button time to render before dodge can happen
+        setTimeout(initDodgeBounds, 100);
+      }
+    }, 2000);
+  } else {
+    btn.classList.add('incorrect');
+    document.getElementById('feedbackText').innerText = qData.noFeedback;
+    setTimeout(() => btn.classList.remove('incorrect'), 1000);
+  }
+}
+
+renderQuestion();
+
+// ── IPAD CONSTRAINED RUNAWAY BUTTON ──
+const btnNo = document.getElementById('btnNo');
+const actionArea = document.getElementById('actionArea');
+let bounds = { width: 0, height: 0 };
+
+function initDodgeBounds() {
+  bounds.width = actionArea.clientWidth;
+  bounds.height = actionArea.clientHeight;
+}
+
+// Update bounds on orientation change (iPad rotation)
+window.addEventListener('resize', initDodgeBounds);
+
+function dodge() {
+  if (bounds.width === 0) initDodgeBounds();
+  
+  const btnWidth = btnNo.offsetWidth;
+  const btnHeight = btnNo.offsetHeight;
+  
+  // Calculate safe area inside the action buttons container
+  const safeX = Math.max(0, Math.random() * (bounds.width - btnWidth));
+  const safeY = Math.max(0, Math.random() * (bounds.height - btnHeight));
+  
+  // Change transform to Left/Top absolute positioning to prevent scrollbar issues
+  btnNo.style.transform = 'none'; 
+  btnNo.style.left = `${safeX}px`;
+  btnNo.style.top = `${safeY}px`;
+}
+
+// ── VICTORY ──
+function winState() {
+  document.getElementById('ultimatePhase').style.display = 'none';
+  document.getElementById('victoryPhase').style.display = 'block';
+
+  // Spawn celebratory golden star SVGs
+  for (let i = 0; i < 30; i++) {
+    setTimeout(() => {
+      const spark = document.createElement('div');
+      spark.className = 'svg-spark';
+      spark.style.left = `${window.innerWidth/2 + (Math.random() - 0.5) * (window.innerWidth * 0.8)}px`;
+      spark.style.top = `${window.innerHeight/2 + (Math.random() - 0.5) * (window.innerHeight * 0.8)}px`;
+      spark.style.animationDuration = '1.5s';
+      
+      spark.innerHTML = `
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 50 0 C 50 40, 60 50, 100 50 C 60 50, 50 60, 50 100 C 50 60, 40 50, 0 50 C 40 50, 50 40, 50 0" fill="#ffdfa3" filter="drop-shadow(0 0 10px #e6a861)"/>
+        </svg>
+      `;
+      document.body.appendChild(spark);
+      setTimeout(() => spark.remove(), 1500);
+    }, i * 80);
+  }
+}
+</script>
+</body>
+</html>
+```
